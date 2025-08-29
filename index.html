@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f8f9fa;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .item-info {
+      flex: 2;
+      font-size: 16px;
+    }
+
+    .item-actions {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .like {
+      cursor: pointer;
+      font-size: 20px;
+      color: grey;
+      transition: color 0.3s ease;
+    }
+
+    .liked {
+      color: red;
+    }
+
+    .delete {
+      cursor: pointer;
+      font-size: 18px;
+      color: crimson;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    button {
+      padding: 4px 8px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .total {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>My Shopping Cart</h1>
+
+  <div id="cart">
+    <!-- Item 1 -->
+    <div class="cart-item" data-price="20">
+      <div class="item-info">T-shirt - N20</div>
+      <div class="item-actions">
+        <span class="like">♥</span>
+        <div class="quantity">
+          <button class="decrease">-</button>
+          <span class="qty">1</span>
+          <button class="increase">+</button>
+        </div>
+        <span class="delete">🗑</span>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="cart-item" data-price="50">
+      <div class="item-info">Shoes - N50</div>
+      <div class="item-actions">
+        <span class="like">♥</span>
+        <div class="quantity">
+          <button class="decrease">-</button>
+          <span class="qty">1</span>
+          <button class="increase">+</button>
+        </div>
+        <span class="delete">🗑</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="total">Total: N<span id="total-price">0</span></div>
+
+  <script>
+    const cart = document.getElementById("cart");
+    const totalPriceEl = document.getElementById("total-price");
+
+    // Function to update total price
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll(".cart-item").forEach(item => {
+        const price = parseFloat(item.getAttribute("data-price"));
+        const qty = parseInt(item.querySelector(".qty").textContent);
+        total += price * qty;
+      });
+      totalPriceEl.textContent = total;
+    }
+
+    // Event delegation for all buttons
+    cart.addEventListener("click", function (e) {
+      const target = e.target;
+
+      // Increase quantity
+      if (target.classList.contains("increase")) {
+        const qtyEl = target.parentElement.querySelector(".qty");
+        qtyEl.textContent = parseInt(qtyEl.textContent) + 1;
+        updateTotal();
+      }
+
+      // Decrease quantity
+      if (target.classList.contains("decrease")) {
+        const qtyEl = target.parentElement.querySelector(".qty");
+        let current = parseInt(qtyEl.textContent);
+        if (current > 1) {
+          qtyEl.textContent = current - 1;
+          updateTotal();
+        }
+      }
+
+      // Delete item
+      if (target.classList.contains("delete")) {
+        target.closest(".cart-item").remove();
+        updateTotal();
+      }
+
+      // Like item
+      if (target.classList.contains("like")) {
+        target.classList.toggle("liked");
+      }
+    });
+
+    // Initial total calculation
+    updateTotal();
+  </script>
+</body>
+
+</html>
